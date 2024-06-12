@@ -1,4 +1,3 @@
-```markdown
 # AWS Volume Cleanup Script
 
 ## Description
@@ -37,7 +36,6 @@ The `volume_snap_cleaner.sh` script is designed to automate the deletion of unus
 
 ## Versioning
 - Version: 1.1.1
-- Author: Michael Quintero
 
 ## Disclaimer
 Use this script at your own risk! Always ensure that you have backups of your data and test the script in a non-production environment before running it in production. I am not responsible for any data loss or other consequences that may arise from the use of this script.
