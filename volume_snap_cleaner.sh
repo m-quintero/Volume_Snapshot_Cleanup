@@ -7,8 +7,6 @@
 #!/bin/bash
 
 SCRIPT_VERSION="1.1.1"
-AUTHOR="michael.quintero@rackspace.com"
-
 
 REGION=""
 TICKET_ID=""
@@ -35,7 +33,7 @@ usage() {
 }
 
 version() {
-    echo "$0 version $SCRIPT_VERSION, Author: $AUTHOR"
+    echo "$0 version $SCRIPT_VERSION"
     exit 0
 }
 
