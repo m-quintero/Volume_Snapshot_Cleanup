@@ -1,4 +1,3 @@
-````markdown
 # AWS Volume Cleanup Script
 
 ## Description
@@ -15,7 +14,7 @@ The `volume_snap_cleaner.sh` script is designed to automate the deletion of unus
 - **AMI Dependency Handling**: If a snapshot is in use by an AMI, prompts user to deregister and retry deletion.
 - **CloudTrail Auditing**: Logs the most recent relevant deletion event for each resource with retry logic.
 - **Report Generation**: Produces a detailed report including deletion outcomes and audit logs.
-- **Robust Error Handling**: Provides descriptive output for failures and reasons (e.g., `VolumeInUse`, `InvalidSnapshot.InUse`).
+- **Robust Error Handling**: Provides descriptive output for failures and reasons, e.g., 'VolumeInUse', 'InvalidSnapshot.InUse'.
 
 ## Prerequisites
 
