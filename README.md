@@ -1,46 +1,61 @@
+````markdown
 # AWS Volume Cleanup Script
 
 ## Description
-The `volume_snap_cleaner.sh` script is designed to automate the deletion of unused AWS EBS volumes or snapshots. It supports input files containing mixed resource types and includes auditing features via CloudTrail to track deletion actions.
+The `volume_snap_cleaner.sh` script is designed to automate the deletion of unused AWS EBS volumes and snapshots. It supports input files containing mixed resource types and includes CloudTrail-based auditing for secure, accountable operations.
 
 ## Features
-- **Mixed Input Support**: Detects and prompts for EBS volume or snapshot processing if input file includes both.
+
+- **Dual Resource Deletion**: Supports deleting both EBS volumes and snapshots in a single run.
 - **Region Selection**: Operates in a specified AWS region or across all supported US regions.
-- **Account Type**: Supports both commercial and government account types.
-- **Dry Run Mode**: Safely simulate deletions before executing them.
-- **Ticket Identifier**: Adds a tracking ID to the deletion report.
-- **Safety Checks**: The script includes confirmation prompts to prevent accidental deletions.
-- **Status Check**: Before deletion, the script displays the current status of the resources and asks for user confirmation.
-- **CloudTrail Auditing**: Captures and logs the most recent CloudTrail event for each deleted resource.
-- **Report Generation**: Creates a detailed report post-deletion and displays it on-screen.
-- **Error Handling**: Provides feedback for missing resources, AMI conflicts, and permission issues.
+- **Account Type Support**: Compatible with both commercial and government AWS accounts.
+- **Ticket Identifier**: Adds a tracking ID to the deletion report for traceability.
+- **Status Checks**: Displays current resource status before deletion with user confirmation.
+- **Volume Attachment Detection**: Detects if a volume is attached to an instance and skips deletion safely.
+- **AMI Dependency Handling**: If a snapshot is in use by an AMI, prompts user to deregister and retry deletion.
+- **CloudTrail Auditing**: Logs the most recent relevant deletion event for each resource with retry logic.
+- **Report Generation**: Produces a detailed report including deletion outcomes and audit logs.
+- **Robust Error Handling**: Provides descriptive output for failures and reasons (e.g., `VolumeInUse`, `InvalidSnapshot.InUse`).
 
 ## Prerequisites
-- AWS CLI must be installed and configured with required permissions to manage EBS and query CloudTrail.
-- jq must be installed to parse JSON responses
-- Bash environment to run the script.
+
+- AWS CLI must be installed and configured with permissions to manage EBS and access CloudTrail.
+- `jq` must be installed to parse JSON responses.
+- Bash environment (Linux or macOS) to run the script.
 
 ## Usage
+
 ```bash
 ./volume_snap_cleaner.sh [OPTIONS]
-```
+````
 
 ### Options
-- `-f FILE`: Set the input file containing EBS volumes or snapshots (required).
-- `-r REGION`: Set the AWS region for the operation (default: checks all US regions).
-- `-t TICKET_ID`: Add a ticket identifier for the operation. (optional).
-- `-c ACCOUNT_TYPE`: Account type: commercial or government (default: commercial).
-- `-d`: Dry-run mode (no resources will be deleted).
-- `-v`: Show version information.
-- `-h`: Show usage information.
+
+* `-f FILE` : Input file containing EBS volume and/or snapshot IDs (required).
+* `-r REGION` : AWS region to target (optional; checks all supported US regions if omitted).
+* `-t TICKET_ID` : Ticket or change ID for audit traceability.
+* `-c ACCOUNT_TYPE` : AWS account type: `commercial` or `government` (default: `commercial`).
+* `-v` : Display script version.
+* `-h` : Show usage instructions.
 
 ### Example
+
 ```bash
-./volume_snap_cleaner.sh -f resources_to_be_deleted.txt -r us-west-1 -t TICKET123 -c commercial
+./volume_snap_cleaner.sh -f resources_to_be_deleted.txt -r us-west-2 -t CHG45678 -c government
 ```
 
+## Output
+
+* A `report_<ticket_id>_<timestamp>.txt` file is generated containing:
+
+  * List of deleted resources.
+  * CloudTrail audit records for each deletion.
+  * Summary counts by region and resource type.
+
 ## Versioning
-- Version: 2.0
+
+* **Current Version**: `2.8.5`
 
 ## Disclaimer
-Use this script at your own risk! Always ensure that you have backups of your data and test the script in a non-production environment before running it in production. I am not responsible for any data loss or other consequences that may arise from the use of this script.
+
+> Use this script at your own risk. Always ensure that you have proper backups and test in a non-production environment. The author assumes no responsibility for data loss or unintended consequences resulting from the use of this script.
