@@ -1,5 +1,5 @@
 #############################################################################################
-# Script Name: volume_snap_cleaner.sh
+# Script Name: shredops.sh
 # Author: michael.quintero@rackspace.com
 # Description: Tool to help clean up EBS volumes and/or snapshots based on a provided list
 ##############################################################################################
@@ -20,6 +20,10 @@ GOVERNMENT_US_REGIONS=('us-gov-west-1' 'us-gov-east-1')
 set -o errexit
 set -o pipefail
 set -o nounset
+
+# Temp files to separate volume/snapshot IDs if the user wants them handled separately
+FILTERED_FILE_VOLS=$(mktemp)
+FILTERED_FILE_SNAPS=$(mktemp)
 
 # Auto-clean temp files when script exits
 trap 'rm -f "$FILTERED_FILE_VOLS" "$FILTERED_FILE_SNAPS"' EXIT
@@ -65,10 +69,6 @@ if [ -z "$FILE_INPUT" ] || [ ! -f "$FILE_INPUT" ]; then
     echo "Error: Input file not provided or does not exist."
     usage
 fi
-
-# Temp files to separate volume/snapshot IDs if the user wants them handled separately
-FILTERED_FILE_VOLS=$(mktemp)
-FILTERED_FILE_SNAPS=$(mktemp)
 
 # What am I working with here! Figures out what type of resources (volumes, snapshots, or both) are in the input file
 has_vols=false
@@ -384,3 +384,4 @@ done
 echo "Report generated at: $REPORT_FILE"
 echo
 cat "$REPORT_FILE"
+
